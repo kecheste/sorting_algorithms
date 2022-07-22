@@ -26,7 +26,6 @@ void heap_sort(int *array, size_t size)
 		heapify(array, (size_t)i, 0, size);
 	}
 }
-
 /**
  * heapify - turns an array in a heap tree
  * @array: array to turn into heap
