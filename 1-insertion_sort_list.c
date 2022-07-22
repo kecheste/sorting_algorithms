@@ -1,58 +1,61 @@
 #include "sort.h"
+
 /**
- * insertion_sort_list - sort a dlist via insertion sort
- * @list: the list to sort
+ * len_list - returns the length of a linked list
+ * @h: pointer to the list
  *
- *
+ * Return: length of list
+ */
+int len_list(listint_t *h)
+{
+	int len = 0;
+
+	while (h)
+	{
+		len++;
+		h = h->next;
+	}
+	return (len);
+}
+
+/**
+ * insertion_sort_list - sorts a linked list with the Insert Sort algorithm
+ * @list: double pointer to the list to sort
  */
 void insertion_sort_list(listint_t **list)
 {
-	/* declarations */
-	listint_t *a, *b;
+	listint_t *curr = NULL, *one = NULL;
+	listint_t *two = NULL, *three = NULL, *four = NULL;
 
-	/* check for bad things */
-	if (!(list && *list && (*list)->next))
+	if (!list || !(*list) || len_list(*list) < 2)
 		return;
 
-	/* set up for some insertion sort & swap */
-	a = (*list)->next;
+	curr = *list;
 
-	while (a)
+	while (curr)
 	{
-		b = a;
-		a = a->next;
-		while (b && b->prev)
+		if (curr->prev && curr->n < curr->prev->n)
 		{
-			if (b->prev->n > b->n)
-			{
-				swapper(b->prev, b);
-				if (!b->prev)
-					*list = b;
-				/* cast to const for print func */
-				print_list((const listint_t *)*list);
-			}
+			one = curr->prev->prev;
+			two = curr->prev;
+			three = curr;
+			four = curr->next;
+
+			two->next = four;
+			if (four)
+				four->prev = two;
+			three->next = two;
+			three->prev = one;
+			if (one)
+				one->next = three;
 			else
-				b = b->prev;
+				*list = three;
+			two->prev = three;
+			curr = *list;
+			print_list(*list);
+			continue;
 		}
+		else
+			curr = curr->next;
 	}
-
-}
-
-
-/**
- * swapper - a function to help swap 2 nodes in a dlist
- * @a: one node
- * @b: the other node
- *
- */
-void swapper(listint_t *a, listint_t *b)
-{
-	if (a->prev)
-		a->prev->next = b;
-	if (b->next)
-		b->next->prev = a;
-	a->next = b->next;
-	b->prev = a->prev;
-	a->prev = b;
-	b->next = a;
 }
